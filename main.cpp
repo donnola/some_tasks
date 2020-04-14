@@ -56,11 +56,13 @@ pair<size_t, size_t> Image::Find_coordinates() {
     size_t row_in_cat_image = 0;
     pair<size_t, size_t> last_inter(0, 0);
     size_t next_row = 0;
+    vector<vector<size_t>> buf_pat(cut_image.size(), vector<size_t>(cut_image[0].size()));
+    for (size_t i = 0; i < cut_image.size(); ++i) {
+        PrefixFunction(cut_image[row_in_cat_image], buf_pat[i]);
+    }
     while (row_in_cat_image < cut_image.size()) {
         size_t cur_len = 0;
         size_t str_ind = 0;
-        vector<size_t> buf_pat(cut_image[0].size());
-        PrefixFunction(cut_image[row_in_cat_image], buf_pat);
         for (size_t j = last_inter.first; j < main_image[0].size(); ++j) {
             if (str_ind == 0 && cut_image[row_in_cat_image][0] == main_image[next_row][j]) {
                 cur_len = 1;
@@ -76,7 +78,7 @@ pair<size_t, size_t> Image::Find_coordinates() {
             }
             if (str_ind > 0) {
                 while ((cur_len > 0) && (main_image[next_row][j] != cut_image[row_in_cat_image][cur_len])) {
-                    cur_len = buf_pat[cur_len - 1];
+                    cur_len = buf_pat[row_in_cat_image][cur_len - 1];
                 }
                 if (cut_image[row_in_cat_image][cur_len] == main_image[next_row][j]) {
                     ++cur_len;
@@ -110,8 +112,8 @@ pair<size_t, size_t> Image::Find_coordinates() {
                 }
                 else if (j == main_image[0].size() - 1) {
                     ++last_inter.second;
-                    next_row = last_inter.second;
                     last_inter.first = 0;
+                    next_row = last_inter.second;
                     row_in_cat_image = 0;
                     break;
                 }
