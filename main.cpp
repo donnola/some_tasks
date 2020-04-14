@@ -110,7 +110,7 @@ pair<size_t, size_t> Image::Find_coordinates() {
                 }
                 else if (j == main_image[0].size() - 1) {
                     ++last_inter.second;
-                    next_row == last_inter.second;
+                    next_row = last_inter.second;
                     last_inter.first = 0;
                     row_in_cat_image = 0;
                     break;
